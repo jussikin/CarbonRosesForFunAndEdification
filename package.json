@@ -1,6 +1,6 @@
 {
-    "name": "delete-test-01",
-    "description": "delete-test-01-description",
+    "name": "carbon-rose",
+    "description": "carbon roses from inhouse co2 data",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
