@@ -4,11 +4,12 @@ const streams = require('memory-streams');
 
 
 exports.getCarbonRoseHandler = async (event) => {
+    let daysBack = isInt(event.pathParameters.days) ? Number(event.pathParameters.days) : 1;
+    console.log('daysback:'+daysBack);
 
-    console.info('received:', event);
     const collectedData = await Promise.all([
-                                 dataAccusation.collectDataFromYesterday('netamakkari','co2'),
-                                 dataAccusation.collectDataFromYesterday('netatmo','co2')]);
+                                 dataAccusation.collectDataFromDaysPast('netamakkari','co2',daysBack),
+                                 dataAccusation.collectDataFromDaysPast('netatmo','co2',daysBack)]);
     const [norm1,norm2] = collectedData.map(dataAccusation.normalizer);
     
     const img = imageGenerator.generateBaseImage();
@@ -30,3 +31,7 @@ exports.getCarbonRoseHandler = async (event) => {
     console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
     return response;
 }
+
+function isInt(value) {
+    return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+  }

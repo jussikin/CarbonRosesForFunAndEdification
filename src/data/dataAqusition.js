@@ -28,11 +28,12 @@ function normalizer(linedata) {
     });
 }
 
-async function collectDataFromYesterday(measurementName,fieldname) {
+async function collectDataFromDaysPast(measurementName,fieldname,daysPast) {
+    const startDay= daysPast-1;
     const lines = await queryApi.collectRows(`
     import "date"
-    today = date.truncate(t: now(), unit: 1d)
-    yesterday = date.truncate(t: -1d, unit: 1d)
+    today = date.truncate(t: -${startDay}d, unit: 1d)
+    yesterday = date.truncate(t: -${daysPast}d, unit: 1d)
     
     from(bucket: "${bucket}")
       |> range(start: yesterday, stop:today)
@@ -45,6 +46,6 @@ async function collectDataFromYesterday(measurementName,fieldname) {
 
 
 module.exports = {
-    collectDataFromYesterday,
+    collectDataFromDaysPast,
     normalizer
 }
